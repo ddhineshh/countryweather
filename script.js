@@ -18,9 +18,9 @@ getData("https://restcountries.com/v3.1/all")
         if (data.length == 0) {
             content.innerHTML = `<div class="alert alert-danger" role = "alert">No Data</div>`
         }
-        // else {
-        //     putData(data.slice(0, 20))
-        // }
+        else {
+            putData(data.slice(0, 20))
+        }
     })
     .catch((err) => {
         console.log(err.message)
@@ -43,32 +43,13 @@ let putData = (resultData) => {
             <p class="card-title text-center" >Country Code: ${country.altSpellings[0]}</p>
             <p class="card-title text-center">Lati,Longi: ${country.latlng}</p>
             <br>
-            <p class="card-title text-center"><button class="btn btn-primary p-1" id="weather" onclick="weatherData()" type="submit">Click for weather</button></p>
-            <div id="weatherCard"></div>
+            <p class="card-title text-center"><button class="btn btn-primary p-1" onclick="getWeatherData('${country.capital}')">Click for weather</button></p>
+            <div id="`+ `${country.capital}` + `"></div>
             
         </div>
         
         </div>`)
 }
-
-//Getting weather data by country
-async function weatherData() {
-    var capital = document.getElementById("capital").innerText
-    console.log(capital)
-    let weatherReport = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=536d3fcba3222d9dca4c2e1d06ca2ae6`)
-    let res = await weatherReport.json()
-    var weatherCard = document.getElementById('weather');
-    weatherCard.innerHTML = `<div class="card">
-        <div class="card-body bg-danger ">
-          <p class="card-text">Temperature : ${res.main.temp}</p>
-          <p class="card-text">Windspeed: ${res.wind.speed}</p>
-          <p class="card-text">Humidity : ${res.main.humidity}</p>
-         
-        </div>
-      </div>`
-
-}
-
 
 //Print Country details as default and filtering country while typing
 document.querySelector("#input").addEventListener("input", (event) => {
@@ -85,8 +66,21 @@ document.querySelector("#input").addEventListener("input", (event) => {
     }
 })
 
+//Fetching weather data
+const getWeatherData = async (capital) => {
+    console.log(capital)
+    let weatherReport = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=536d3fcba3222d9dca4c2e1d06ca2ae6`)
+    let res = await weatherReport.json()
+    var weatherCard = document.getElementById(capital);
+    weatherCard.innerHTML = `<div class="card">
+        <div class="card-body bg-danger ">
+          <p class="card-text">Temperature : ${res.main.temp}</p>
+          <p class="card-text">Windspeed: ${res.wind.speed}</p>
+          <p class="card-text">Humidity : ${res.main.humidity}</p>
+        </div>
+      </div>`
 
-
+}
 
 
 
